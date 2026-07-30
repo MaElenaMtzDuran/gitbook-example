@@ -13,6 +13,7 @@ Este repositorio es una plantilla de referencia que muestra una **estructura de 
 5. [Sincronizar el repositorio con GitHub](#5-sincronizar-el-repositorio-con-github)
 6. [Despliegue continuo (CI/CD) con GitHub Actions](#6-despliegue-continuo-cicd-con-github-actions)
 7. [Personalizar la plantilla](#7-personalizar-la-plantilla)
+8. [Agregar un capítulo nuevo con la plantilla](#8-agregar-un-capítulo-nuevo-con-la-plantilla)
 
 ---
 
@@ -26,6 +27,9 @@ gitbook-example/
 ├── .gitbook.yaml                      # Configuración para la integración con GitBook.com
 ├── .gitignore                         # Excluye node_modules/, _book/ y dist/ del control de versiones
 ├── chapters/                          # Contenido de prueba dividido por capítulo
+│   ├── _template/                      # Plantilla reutilizable para capítulos nuevos
+│   │   ├── README.md
+│   │   └── seccion-plantilla.md
 │   ├── capitulo1/
 │   │   ├── README.md
 │   │   ├── instalacion.md
@@ -158,6 +162,36 @@ Con esto, cada cambio fusionado a `main` se refleja automáticamente en la docum
 - Ajusta título, autor, idioma y plugins en `book.json`.
 - Modifica los nombres de los archivos de salida (`manual.pdf`, `manual.epub`) en `scripts/build.sh` y en el workflow si lo deseas.
 - Si no necesitas GitHub Pages, elimina el paso de despliegue en `gitbook-deploy.yml` y deja solo la generación de PDF/EPUB como artefactos.
+
+## 8. Agregar un capítulo nuevo con la plantilla
+
+La carpeta [`chapters/_template/`](chapters/_template) contiene una plantilla lista para copiar cada vez que necesites un capítulo nuevo:
+
+- [`chapters/_template/README.md`](chapters/_template/README.md) — plantilla de introducción del capítulo.
+- [`chapters/_template/seccion-plantilla.md`](chapters/_template/seccion-plantilla.md) — plantilla para cada sección dentro del capítulo.
+
+Para usarla:
+
+1. Copia la carpeta completa y renómbrala, por ejemplo:
+
+   ```bash
+   cp -r chapters/_template chapters/capitulo4
+   ```
+
+2. Dentro de `chapters/capitulo4/`, renombra `seccion-plantilla.md` por cada sección que necesites (por ejemplo `introduccion.md`, `casos-de-uso.md`), duplicando el archivo tantas veces como secciones tenga el capítulo.
+3. Edita el `README.md` del capítulo y cada archivo de sección para reemplazar los títulos y textos de ejemplo, y borra los comentarios `<!-- ... -->` de instrucciones.
+4. Actualiza el enlace en el `README.md` del capítulo para que apunte a cada sección real.
+5. Registra el nuevo capítulo y sus secciones en [`SUMMARY.md`](SUMMARY.md), respetando la sangría de la jerarquía existente:
+
+   ```markdown
+   * [Capítulo 4: Tu nuevo título](chapters/capitulo4/README.md)
+       * [4.1 Primera sección](chapters/capitulo4/introduccion.md)
+       * [4.2 Segunda sección](chapters/capitulo4/casos-de-uso.md)
+   ```
+
+6. Guarda y confirma los cambios; si el repositorio ya está sincronizado con GitBook (Git Sync), el nuevo capítulo aparecerá automáticamente en el space tras el commit.
+
+La carpeta `_template/` en sí **no debe** agregarse a `SUMMARY.md` — solo sirve como origen para copiar, no como contenido publicado del libro.
 
 ---
 

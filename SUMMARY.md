@@ -1,5 +1,12 @@
 # Resumen
 
+<!--
+  Para agregar un capítulo nuevo, copia la carpeta chapters/_template/
+  (ver README.md, sección 8) y registra aquí sus enlaces. No incluyas
+  chapters/_template/ en este archivo: es solo la plantilla de origen,
+  no contenido publicado del libro.
+-->
+
 * [Introducción](README.md)
 
 * [Capítulo 1: Primeros pasos](chapters/capitulo1/README.md)
