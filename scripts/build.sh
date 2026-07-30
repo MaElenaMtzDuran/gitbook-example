@@ -25,6 +25,16 @@ if ! command -v gitbook >/dev/null 2>&1; then
   exit 1
 fi
 
+echo "==> Aplicando correccion conocida de graceful-fs en gitbook-cli..."
+# gitbook-cli (sin mantenimiento desde 2018) trae empaquetada una version
+# antigua de graceful-fs que falla con "TypeError: cb.apply is not a
+# function" en versiones modernas de Node/npm. Ver:
+# https://github.com/GitbookIO/gitbook-cli/issues/110
+GITBOOK_CLI_NPM="$(npm root -g 2>/dev/null)/gitbook-cli/node_modules/npm/node_modules"
+if [ -d "$GITBOOK_CLI_NPM" ]; then
+  (cd "$GITBOOK_CLI_NPM" && npm install graceful-fs@latest --save) || true
+fi
+
 echo "==> Instalando complementos declarados en book.json..."
 gitbook install
 

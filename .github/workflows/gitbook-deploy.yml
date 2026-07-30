@@ -24,6 +24,19 @@ jobs:
       - name: Instalar gitbook-cli
         run: npm install -g gitbook-cli
 
+      - name: Corregir bug conocido de graceful-fs en gitbook-cli
+        # gitbook-cli (sin mantenimiento desde 2018) trae empaquetada una version
+        # antigua de graceful-fs que falla con "TypeError: cb.apply is not a
+        # function" en versiones modernas de Node/npm. La solucion documentada
+        # por la comunidad es actualizar esa dependencia interna antes de usar
+        # gitbook-cli. Ver: https://github.com/GitbookIO/gitbook-cli/issues/110
+        run: |
+          GITBOOK_CLI_NPM="$(npm root -g)/gitbook-cli/node_modules/npm/node_modules"
+          if [ -d "$GITBOOK_CLI_NPM" ]; then
+            cd "$GITBOOK_CLI_NPM"
+            npm install graceful-fs@latest --save
+          fi
+
       - name: Instalar Calibre (requerido para exportar EPUB)
         run: sudo apt-get update && sudo apt-get install -y calibre
 

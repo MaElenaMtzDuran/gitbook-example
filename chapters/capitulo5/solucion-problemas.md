@@ -8,9 +8,18 @@
 npm install -g gitbook-cli
 ```
 
-### El comando `gitbook install` falla al descargar plugins
+### `gitbook install` falla con `TypeError: cb.apply is not a function`
 
-Suele deberse a incompatibilidades entre versiones recientes de Node.js y `gitbook-cli`. Verifica que estés usando Node 12.x (ver [1.1 Instalación del entorno](../capitulo1/instalacion.md)); puedes usar `nvm` para alternar versiones de Node fácilmente.
+Es un bug conocido y ampliamente documentado de `gitbook-cli` (sin mantenimiento activo desde 2018): trae empaquetada una versión antigua de `graceful-fs` incompatible con versiones modernas de Node.js/npm (ver [issue #110 en GitHub](https://github.com/GitbookIO/gitbook-cli/issues/110)). La solución documentada por la comunidad es actualizar esa dependencia interna antes de ejecutar cualquier comando de `gitbook`:
+
+```bash
+cd "$(npm root -g)/gitbook-cli/node_modules/npm/node_modules"
+npm install graceful-fs@latest --save
+```
+
+Después de esto, vuelve a ejecutar `gitbook install`. Tanto [`scripts/build.sh`](../../scripts/build.sh) como el workflow de [GitHub Actions](../../.github/workflows/gitbook-deploy.yml) de este repositorio ya aplican esta corrección automáticamente antes de instalar los complementos.
+
+Si el error persiste, verifica también que estés usando Node 12.x (ver [1.1 Instalación del entorno](../capitulo1/instalacion.md)); puedes usar `nvm` para alternar versiones de Node fácilmente.
 
 ### La exportación a EPUB falla o queda incompleta
 
