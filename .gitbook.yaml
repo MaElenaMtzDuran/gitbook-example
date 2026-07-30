@@ -1,0 +1,11 @@
+# Configuración opcional para la integración GitBook.com <-> GitHub.
+# Si sincronizas este repositorio con un espacio de GitBook.com (GitBook Sync),
+# este archivo le indica a GitBook dónde están la portada, el índice y el
+# contenido, permitiendo mantener el espacio de GitBook.com y el repositorio
+# de GitHub sincronizados automáticamente en cada push.
+
+root: ./
+
+structure:
+  readme: README.md
+  summary: SUMMARY.md
