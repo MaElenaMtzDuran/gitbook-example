@@ -28,3 +28,7 @@
 * [Capítulo 5: Preguntas frecuentes](chapters/capitulo5/README.md)
     * [5.1 Preguntas generales](chapters/capitulo5/faq-general.md)
     * [5.2 Solución de problemas](chapters/capitulo5/solucion-problemas.md)
+
+* [Capítulo 6: Glosario](chapters/capitulo6/README.md)
+
+* [Capítulo 7: Índice temático](chapters/capitulo7/README.md)
