@@ -42,10 +42,14 @@ gitbook-example/
 │   │   ├── README.md
 │   │   ├── exportacion.md
 │   │   └── integracion-continua.md
-│   └── capitulo4/
+│   ├── capitulo4/
+│   │   ├── README.md
+│   │   ├── revision-cambios.md
+│   │   └── buenas-practicas.md
+│   └── capitulo5/
 │       ├── README.md
-│       ├── revision-cambios.md
-│       └── buenas-practicas.md
+│       ├── faq-general.md
+│       └── solucion-problemas.md
 ├── scripts/
 │   └── build.sh                       # Automatización: genera PDF y EPUB con gitbook-cli
 └── .github/
@@ -205,3 +209,4 @@ Para más detalles, consulta también:
 - [Capítulo 2: Escritura de contenido](chapters/capitulo2/README.md)
 - [Capítulo 3: Generación y despliegue](chapters/capitulo3/README.md)
 - [Capítulo 4: Colaboración y buenas prácticas](chapters/capitulo4/README.md)
+- [Capítulo 5: Preguntas frecuentes](chapters/capitulo5/README.md)

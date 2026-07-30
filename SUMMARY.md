@@ -24,3 +24,7 @@
 * [Capítulo 4: Colaboración y buenas prácticas](chapters/capitulo4/README.md)
     * [4.1 Flujo de revisión con pull requests](chapters/capitulo4/revision-cambios.md)
     * [4.2 Buenas prácticas de redacción](chapters/capitulo4/buenas-practicas.md)
+
+* [Capítulo 5: Preguntas frecuentes](chapters/capitulo5/README.md)
+    * [5.1 Preguntas generales](chapters/capitulo5/faq-general.md)
+    * [5.2 Solución de problemas](chapters/capitulo5/solucion-problemas.md)
