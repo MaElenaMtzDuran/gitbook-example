@@ -3,24 +3,12 @@
   "description": "Estructura estandarizada de ejemplo para proyectos GitBook, con generación automática de PDF y EPUB y despliegue continuo vía GitHub.",
   "author": "Ma. Elena Martínez Durán",
   "language": "es",
-  "gitbook": "3.2.3",
   "root": "./",
   "structure": {
     "readme": "README.md",
     "summary": "SUMMARY.md"
   },
-  "plugins": [
-    "theme-default",
-    "search-pro",
-    "sharing",
-    "font-settings",
-    "-search"
-  ],
   "pluginsConfig": {
-    "sharing": {
-      "all": false,
-      "github": true
-    },
     "fontsettings": {
       "theme": "white",
       "family": "sans",

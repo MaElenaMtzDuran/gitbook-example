@@ -14,7 +14,7 @@ Estas son algunas convenciones recomendadas para mantener el libro consistente a
 - Prefiere listas y tablas sobre párrafos largos cuando describas pasos o comparaciones.
 - Resalta advertencias o notas importantes con bloques de cita:
 
-  > **Advertencia:** los cambios en `book.json` no se reflejan hasta ejecutar `gitbook install` de nuevo.
+  > **Advertencia:** si agregas un plugin nuevo en `book.json`, debes instalar el paquete npm correspondiente antes de volver a ejecutar `honkit build`.
 
 ## Nomenclatura de archivos
 
@@ -24,5 +24,5 @@ Estas son algunas convenciones recomendadas para mantener el libro consistente a
 ## Antes de fusionar un cambio
 
 - Revisa que los enlaces internos funcionen (por ejemplo, [Flujo de revisión con pull requests](revision-cambios.md)).
-- Ejecuta `gitbook serve` localmente para previsualizar el resultado antes de abrir el pull request.
+- Ejecuta `honkit serve` localmente para previsualizar el resultado antes de abrir el pull request.
 - Verifica que el nuevo contenido esté registrado en `SUMMARY.md` con la sangría correcta.

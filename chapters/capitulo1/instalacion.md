@@ -2,14 +2,14 @@
 
 Para trabajar con este repositorio de ejemplo necesitas:
 
-1. **Node.js** (se recomienda la versión 12.x, la última compatible con `gitbook-cli`).
-2. **gitbook-cli**, instalado de forma global:
+1. **Node.js** (se recomienda la versión LTS, 18 o superior).
+2. **HonKit** (fork mantenido de GitBook), instalado de forma global:
 
    ```bash
-   npm install -g gitbook-cli
+   npm install -g honkit
    ```
 
-3. **Calibre** (opcional), requerido internamente por GitBook para exportar a EPUB:
+3. **Calibre** (opcional), requerido internamente por HonKit para exportar a PDF/EPUB:
 
    - Linux: `sudo apt-get install calibre`
    - macOS: `brew install calibre`
@@ -22,14 +22,8 @@ Para trabajar con este repositorio de ejemplo necesitas:
    cd gitbook-example
    ```
 
-5. Instala los complementos declarados en `book.json`:
+5. Sirve el libro en modo local para previsualizarlo en `http://localhost:4000`:
 
    ```bash
-   gitbook install
-   ```
-
-6. Sirve el libro en modo local para previsualizarlo en `http://localhost:4000`:
-
-   ```bash
-   gitbook serve
+   honkit serve
    ```

@@ -33,7 +33,7 @@ Guía rápida por tema para encontrar dónde se trata cada asunto dentro del lib
 
 - [Capítulo 6: Glosario](../capitulo6/README.md)
 
-### Instalación del entorno (Node.js, gitbook-cli, Calibre)
+### Instalación del entorno (Node.js, HonKit, Calibre)
 
 - [1.1 Instalación del entorno](../capitulo1/instalacion.md)
 

@@ -1,29 +1,25 @@
 # 5.2 Solución de problemas
 
-### `gitbook: command not found`
+### `honkit: command not found`
 
-`gitbook-cli` no está instalado globalmente, o no está en el `PATH`. Instálalo con:
-
-```bash
-npm install -g gitbook-cli
-```
-
-### `gitbook install` falla con `TypeError: cb.apply is not a function`
-
-Es un bug conocido y ampliamente documentado de `gitbook-cli` (sin mantenimiento activo desde 2018): trae empaquetada una versión antigua de `graceful-fs` incompatible con versiones modernas de Node.js/npm (ver [issue #110 en GitHub](https://github.com/GitbookIO/gitbook-cli/issues/110)). La solución documentada por la comunidad es actualizar esa dependencia interna antes de ejecutar cualquier comando de `gitbook`:
+HonKit no está instalado globalmente, o no está en el `PATH`. Instálalo con:
 
 ```bash
-cd "$(npm root -g)/gitbook-cli/node_modules/npm/node_modules"
-npm install graceful-fs@latest --save
+npm install -g honkit
 ```
 
-Después de esto, vuelve a ejecutar `gitbook install`. Tanto [`scripts/build.sh`](../../scripts/build.sh) como el workflow de [GitHub Actions](../../.github/workflows/gitbook-deploy.yml) de este repositorio ya aplican esta corrección automáticamente antes de instalar los complementos.
+### Por qué este repositorio usa HonKit y no `gitbook-cli`
 
-Si el error persiste, verifica también que estés usando Node 12.x (ver [1.1 Instalación del entorno](../capitulo1/instalacion.md)); puedes usar `nvm` para alternar versiones de Node fácilmente.
+La versión original de esta plantilla usaba `gitbook-cli`, el CLI oficial de GitBook. Ese paquete está sin mantenimiento desde 2018 y presenta dos problemas en entornos modernos:
 
-### La exportación a EPUB falla o queda incompleta
+1. **Crash conocido:** trae empaquetada una versión antigua de `graceful-fs` incompatible con Node.js/npm recientes, y falla con `TypeError: cb.apply is not a function` al ejecutar `gitbook install` (ver [issue #110 en GitHub](https://github.com/GitbookIO/gitbook-cli/issues/110)).
+2. **Fallo silencioso tras el parche:** aun aplicando el parche de `graceful-fs`, `gitbook build`/`gitbook pdf`/`gitbook epub` terminan sin error pero **no generan ningún archivo** (`_book/` y `dist/` quedan vacíos), porque `gitbook-cli` ya no logra descargar ni invocar el motor de GitBook 3.2.3 contra el registro de npm actual.
 
-Confirma que Calibre esté instalado y accesible desde la terminal (`ebook-convert --version`). `gitbook epub` depende de Calibre internamente para generar el archivo final.
+Por eso este repositorio migró a [HonKit](https://github.com/honkit/honkit), el fork de GitBook mantenido activamente por la comunidad. HonKit usa los mismos `book.json` y `SUMMARY.md`, así que la migración no requirió cambiar la estructura del libro — solo reemplazar `gitbook-cli` por `honkit` en `scripts/build.sh` y en el workflow de [GitHub Actions](../../.github/workflows/gitbook-deploy.yml). Ambos archivos ahora verifican explícitamente que `_book/index.html`, `dist/manual.pdf` y `dist/manual.epub` se hayan generado, para detectar este tipo de fallo silencioso de inmediato si volviera a ocurrir.
+
+### La exportación a PDF o EPUB falla o queda incompleta
+
+Confirma que Calibre esté instalado y accesible desde la terminal (`ebook-convert --version`). `honkit pdf` y `honkit epub` dependen de Calibre internamente para generar el archivo final. Para depurar con más detalle, agrega `--log=debug --debug` al comando, por ejemplo `honkit build ./ ./_book --log=debug --debug`.
 
 ### No veo mi repositorio al configurar GitHub Sync en GitBook
 
@@ -40,3 +36,7 @@ GitHub Pages en el plan gratuito no está disponible para repositorios **privado
 ### Los enlaces internos entre capítulos no funcionan en GitBook
 
 Verifica que uses rutas relativas correctas entre archivos `.md` (por ejemplo `../capitulo1/instalacion.md`) y que el archivo de destino exista y esté registrado en `SUMMARY.md`.
+
+### GitHub Pages muestra 404 aunque el workflow terminó en éxito
+
+Esto pasa cuando la rama `gh-pages` no contiene contenido real (por ejemplo, solo un archivo `.nojekyll`), lo cual indica que el paso de build no generó `_book/index.html` — revisa el log de la ejecución en la pestaña *Actions* para confirmar que `honkit build` completó sin errores y que el paso `peaceiris/actions-gh-pages` recibió archivos para publicar. Recuerda también que GitHub Pages del plan gratuito no funciona en repositorios **privados** de cuentas personales: el repositorio debe ser público.

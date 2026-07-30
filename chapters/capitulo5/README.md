@@ -1,6 +1,6 @@
 # Capítulo 5: Preguntas frecuentes
 
-Este capítulo de ejemplo reúne las dudas más comunes al trabajar con esta plantilla: desde la instalación de `gitbook-cli` hasta la sincronización con GitHub y GitBook.
+Este capítulo de ejemplo reúne las dudas más comunes al trabajar con esta plantilla: desde la instalación de HonKit hasta la sincronización con GitHub y GitBook.
 
 ## En este capítulo
 

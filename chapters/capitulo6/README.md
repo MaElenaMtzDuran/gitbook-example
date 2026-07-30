@@ -26,10 +26,6 @@ Registro de un conjunto de cambios guardado en el historial de Git, identificado
 
 Archivo opcional que le indica a GitBook.com dónde están la portada y el índice del libro dentro del repositorio, usado por la integración GitHub Sync.
 
-### `gitbook-cli`
-
-Herramienta de línea de comandos oficial de GitBook usada para previsualizar el libro (`gitbook serve`) y exportarlo a HTML, PDF o EPUB. Ver [1.1 Instalación del entorno](../capitulo1/instalacion.md).
-
 ### Git Sync
 
 Integración bidireccional entre un space de GitBook y un repositorio de GitHub o GitLab: los cambios en GitBook generan commits, y los commits se reflejan como nuevas versiones en GitBook. Ver [3.2 Integración continua con GitHub](../capitulo3/integracion-continua.md).
@@ -40,7 +36,11 @@ Servicio de automatización de GitHub usado en este repositorio para generar el 
 
 ### GitHub Pages
 
-Servicio de GitHub para publicar sitios estáticos directamente desde un repositorio. En este libro se usa para publicar el sitio HTML generado por GitBook.
+Servicio de GitHub para publicar sitios estáticos directamente desde un repositorio. En este libro se usa para publicar el sitio HTML generado por HonKit.
+
+### HonKit
+
+Fork mantenido activamente de GitBook, usado en este repositorio para previsualizar el libro (`honkit serve`) y exportarlo a HTML, PDF o EPUB. Reemplaza a `gitbook-cli`, descontinuado por su autor original en 2019. Ver [1.1 Instalación del entorno](../capitulo1/instalacion.md) y [5.2 Solución de problemas](../capitulo5/solucion-problemas.md).
 
 ### Markdown (GFM)
 

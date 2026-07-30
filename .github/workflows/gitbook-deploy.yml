@@ -1,4 +1,4 @@
-name: Build y despliegue de GitBook
+name: Build y despliegue del libro (HonKit)
 
 on:
   push:
@@ -16,32 +16,21 @@ jobs:
       - name: Clonar repositorio
         uses: actions/checkout@v4
 
-      - name: Configurar Node.js (versión compatible con gitbook-cli)
+      - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '12'
+          node-version: '20'
 
-      - name: Instalar gitbook-cli
-        run: npm install -g gitbook-cli
+      - name: Instalar HonKit
+        # HonKit es el fork mantenido de GitBook (gitbook-cli fue
+        # descontinuado por su autor original en 2019 y ya no genera
+        # salida funcional en entornos Node/npm modernos). HonKit usa
+        # los mismos archivos book.json y SUMMARY.md sin cambios.
+        # Ver: https://github.com/honkit/honkit
+        run: npm install -g honkit
 
-      - name: Corregir bug conocido de graceful-fs en gitbook-cli
-        # gitbook-cli (sin mantenimiento desde 2018) trae empaquetada una version
-        # antigua de graceful-fs que falla con "TypeError: cb.apply is not a
-        # function" en versiones modernas de Node/npm. La solucion documentada
-        # por la comunidad es actualizar esa dependencia interna antes de usar
-        # gitbook-cli. Ver: https://github.com/GitbookIO/gitbook-cli/issues/110
-        run: |
-          GITBOOK_CLI_NPM="$(npm root -g)/gitbook-cli/node_modules/npm/node_modules"
-          if [ -d "$GITBOOK_CLI_NPM" ]; then
-            cd "$GITBOOK_CLI_NPM"
-            npm install graceful-fs@latest --save
-          fi
-
-      - name: Instalar Calibre (requerido para exportar EPUB)
+      - name: Instalar Calibre (requerido para exportar PDF/EPUB)
         run: sudo apt-get update && sudo apt-get install -y calibre
-
-      - name: Instalar complementos de GitBook
-        run: gitbook install
 
       - name: Dar permisos de ejecución al script de build
         run: chmod +x scripts/build.sh

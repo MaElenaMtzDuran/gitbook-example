@@ -1,11 +1,19 @@
 #!/usr/bin/env bash
 #
-# build.sh — Script de automatización para generar PDF y EPUB con gitbook-cli
+# build.sh — Script de automatización para generar el sitio HTML, PDF y EPUB
+#            con HonKit (https://github.com/honkit/honkit), el fork
+#            mantenido de GitBook.
+#
+# Nota de migración: este proyecto usaba originalmente gitbook-cli, pero esa
+# herramienta fue descontinuada por su autor en 2019 y en entornos Node/npm
+# modernos deja de generar salida (falla de forma silenciosa). HonKit es
+# compatible con los mismos archivos book.json y SUMMARY.md, por lo que la
+# migración no requiere cambiar la estructura del libro.
 #
 # Requisitos:
-#   - Node.js 12.x (última versión compatible con gitbook-cli)
-#   - gitbook-cli instalado globalmente: npm install -g gitbook-cli
-#   - Calibre instalado en el sistema (necesario internamente para el EPUB)
+#   - Node.js LTS (v18 o superior recomendado)
+#   - HonKit instalado globalmente: npm install -g honkit
+#   - Calibre instalado en el sistema (necesario internamente para PDF/EPUB)
 #
 # Uso:
 #   chmod +x scripts/build.sh
@@ -15,37 +23,40 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 OUTPUT_DIR="$ROOT_DIR/dist"
+BOOK_DIR="$ROOT_DIR/_book"
 
 cd "$ROOT_DIR"
 mkdir -p "$OUTPUT_DIR"
 
-echo "==> Verificando que gitbook-cli esté instalado..."
-if ! command -v gitbook >/dev/null 2>&1; then
-  echo "ERROR: gitbook-cli no está instalado. Ejecuta: npm install -g gitbook-cli" >&2
+echo "==> Verificando que HonKit esté instalado..."
+if ! command -v honkit >/dev/null 2>&1; then
+  echo "ERROR: HonKit no está instalado. Ejecuta: npm install -g honkit" >&2
   exit 1
 fi
 
-echo "==> Aplicando correccion conocida de graceful-fs en gitbook-cli..."
-# gitbook-cli (sin mantenimiento desde 2018) trae empaquetada una version
-# antigua de graceful-fs que falla con "TypeError: cb.apply is not a
-# function" en versiones modernas de Node/npm. Ver:
-# https://github.com/GitbookIO/gitbook-cli/issues/110
-GITBOOK_CLI_NPM="$(npm root -g 2>/dev/null)/gitbook-cli/node_modules/npm/node_modules"
-if [ -d "$GITBOOK_CLI_NPM" ]; then
-  (cd "$GITBOOK_CLI_NPM" && npm install graceful-fs@latest --save) || true
+echo "==> Generando sitio HTML estático en _book/ ..."
+honkit build ./ ./_book --log=info
+
+if [ ! -f "$BOOK_DIR/index.html" ]; then
+  echo "ERROR: honkit build no generó _book/index.html. Revisa el log anterior." >&2
+  exit 1
 fi
 
-echo "==> Instalando complementos declarados en book.json..."
-gitbook install
-
-echo "==> Generando sitio HTML estático en _book/ ..."
-gitbook build ./ ./_book
-
 echo "==> Generando versión PDF en dist/manual.pdf ..."
-gitbook pdf ./ "$OUTPUT_DIR/manual.pdf"
+honkit pdf ./ "$OUTPUT_DIR/manual.pdf"
+
+if [ ! -s "$OUTPUT_DIR/manual.pdf" ]; then
+  echo "ERROR: honkit pdf no generó dist/manual.pdf." >&2
+  exit 1
+fi
 
 echo "==> Generando versión EPUB en dist/manual.epub ..."
-gitbook epub ./ "$OUTPUT_DIR/manual.epub"
+honkit epub ./ "$OUTPUT_DIR/manual.epub"
+
+if [ ! -s "$OUTPUT_DIR/manual.epub" ]; then
+  echo "ERROR: honkit epub no generó dist/manual.epub." >&2
+  exit 1
+fi
 
 echo "==> Archivos generados:"
 ls -lh "$OUTPUT_DIR"

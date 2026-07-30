@@ -6,11 +6,15 @@ Es una plantilla de referencia con la estructura de carpetas estandarizada para 
 
 ### ¿Qué versión de Node.js debo usar?
 
-Node.js 12.x. Es la última versión compatible con `gitbook-cli`, que ya no recibe actualizaciones. Ver [1.1 Instalación del entorno](../capitulo1/instalacion.md).
+Cualquier versión LTS reciente (18 o superior). Este proyecto usa [HonKit](https://github.com/honkit/honkit) en lugar del descontinuado `gitbook-cli`, por lo que ya no estás limitado a Node 12. Ver [1.1 Instalación del entorno](../capitulo1/instalacion.md).
 
 ### ¿Necesito instalar Calibre?
 
-Solo si vas a exportar a EPUB (`gitbook epub`). Para PDF y para el sitio HTML no es necesario. Ver [1.1 Instalación del entorno](../capitulo1/instalacion.md).
+Solo si vas a exportar a PDF o EPUB (`honkit pdf` / `honkit epub`). Para el sitio HTML no es necesario. Ver [1.1 Instalación del entorno](../capitulo1/instalacion.md).
+
+### ¿Por qué se usa HonKit en lugar de gitbook-cli?
+
+`gitbook-cli` fue descontinuado por su autor original en 2019 y, en entornos Node/npm modernos, sus comandos terminan sin error pero no generan ningún archivo. HonKit es un fork activamente mantenido, compatible con los mismos `book.json`/`SUMMARY.md`, que soluciona ese problema. Ver [5.2 Solución de problemas](solucion-problemas.md).
 
 ### ¿Dónde defino el orden de los capítulos?
 

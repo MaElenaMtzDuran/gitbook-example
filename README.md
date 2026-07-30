@@ -2,6 +2,8 @@
 
 Este repositorio es una plantilla de referencia que muestra una **estructura de carpetas estandarizada** para proyectos de documentación con [GitBook](https://www.gitbook.com/), lista para generar PDF y EPUB de forma automatizada y para desplegarse de forma continua desde GitHub.
 
+> **Nota:** la generación de PDF/EPUB/HTML usa [HonKit](https://github.com/honkit/honkit) en lugar de `gitbook-cli`. HonKit es el fork mantenido activamente de GitBook — usa los mismos archivos `book.json` y `SUMMARY.md` sin cambios. Se adoptó porque `gitbook-cli` fue descontinuado por su autor original en 2019 y ya no genera salida funcional en versiones modernas de Node/npm (ver [capítulo 5, Solución de problemas](chapters/capitulo5/solucion-problemas.md)).
+
 Úsalo como punto de partida: copia la estructura, reemplaza el contenido de prueba de `chapters/` por el tuyo y ajusta `book.json` a tu gusto.
 
 ## Índice de este documento
@@ -55,7 +57,7 @@ gitbook-example/
 │   └── capitulo7/
 │       └── README.md                    # Índice temático
 ├── scripts/
-│   └── build.sh                       # Automatización: genera PDF y EPUB con gitbook-cli
+│   └── build.sh                       # Automatización: genera PDF y EPUB con HonKit
 └── .github/
     └── workflows/
         └── gitbook-deploy.yml         # Pipeline de CI/CD: build + despliegue a GitHub Pages
@@ -66,14 +68,14 @@ Cada capítulo de prueba tiene su propio `README.md` de introducción y archivos
 ## 2. Requisitos previos
 
 - **Git** instalado y configurado con tus credenciales de GitHub.
-- **Node.js 12.x** — es la última versión de Node compatible con `gitbook-cli` (el CLI oficial de GitBook ya no recibe actualizaciones y no soporta versiones de Node más recientes).
-- **gitbook-cli**, instalado globalmente:
+- **Node.js LTS** (v18 o superior recomendado).
+- **HonKit**, instalado globalmente:
 
   ```bash
-  npm install -g gitbook-cli
+  npm install -g honkit
   ```
 
-- **Calibre**, requerido internamente por GitBook para exportar a EPUB:
+- **Calibre**, requerido internamente por HonKit para exportar a PDF/EPUB:
 
   ```bash
   # Debian/Ubuntu
@@ -87,25 +89,24 @@ Cada capítulo de prueba tiene su propio `README.md` de introducción y archivos
 
 ## 3. Uso local: previsualizar el libro
 
-Clona el repositorio e instala los complementos declarados en `book.json`:
+Clona el repositorio:
 
 ```bash
 git clone https://github.com/tu-usuario/gitbook-example.git
 cd gitbook-example
-gitbook install
 ```
 
 Levanta un servidor local de previsualización (por defecto en `http://localhost:4000`):
 
 ```bash
-gitbook serve
+honkit serve
 ```
 
-Cada vez que edites un archivo `.md`, GitBook recompila y refresca la vista automáticamente.
+Cada vez que edites un archivo `.md`, HonKit recompila y refresca la vista automáticamente.
 
 ## 4. Generar PDF y EPUB automáticamente
 
-El script [`scripts/build.sh`](scripts/build.sh) automatiza la generación de ambos formatos usando `gitbook-cli`:
+El script [`scripts/build.sh`](scripts/build.sh) automatiza la generación de ambos formatos usando HonKit:
 
 ```bash
 chmod +x scripts/build.sh
@@ -114,10 +115,9 @@ chmod +x scripts/build.sh
 
 Pasos que ejecuta el script, en orden:
 
-1. `gitbook install` — instala los plugins definidos en `book.json`.
-2. `gitbook build ./ ./_book` — genera el sitio HTML estático.
-3. `gitbook pdf ./ ./dist/manual.pdf` — genera el PDF.
-4. `gitbook epub ./ ./dist/manual.epub` — genera el EPUB.
+1. `honkit build ./ ./_book` — genera el sitio HTML estático (y verifica que `_book/index.html` exista).
+2. `honkit pdf ./ ./dist/manual.pdf` — genera el PDF (y verifica que el archivo no esté vacío).
+3. `honkit epub ./ ./dist/manual.epub` — genera el EPUB (y verifica que el archivo no esté vacío).
 
 Al terminar encontrarás los archivos en `dist/manual.pdf` y `dist/manual.epub`. Ambas carpetas (`_book/` y `dist/`) están excluidas del control de versiones mediante `.gitignore`, ya que son artefactos generados que no deben versionarse.
 
@@ -153,7 +153,7 @@ A partir de este punto, cualquier colaborador puede clonar el repositorio, crear
 Este repositorio incluye un flujo de trabajo listo para usar en [`.github/workflows/gitbook-deploy.yml`](.github/workflows/gitbook-deploy.yml), que se ejecuta automáticamente en cada `push` a la rama `main` (o manualmente desde la pestaña *Actions* de GitHub). El flujo realiza:
 
 1. Descarga del código (`actions/checkout`).
-2. Instalación de Node.js 12 y `gitbook-cli`.
+2. Instalación de Node.js LTS y HonKit.
 3. Instalación de Calibre (necesario para el EPUB).
 4. Ejecución de `scripts/build.sh`, que genera el sitio HTML (`_book/`), el PDF y el EPUB.
 5. Publicación del sitio HTML en **GitHub Pages**, usando la acción `peaceiris/actions-gh-pages`.
@@ -171,7 +171,7 @@ Con esto, cada cambio fusionado a `main` se refleja automáticamente en la docum
 ## 7. Personalizar la plantilla
 
 - Reemplaza el contenido de prueba en `chapters/capitulo1`, `chapters/capitulo2` y `chapters/capitulo3` por tus propios capítulos, y actualiza `SUMMARY.md` para reflejar la nueva jerarquía.
-- Ajusta título, autor, idioma y plugins en `book.json`.
+- Ajusta título, autor, idioma y plugins en `book.json` (HonKit soporta paquetes `honkit-plugin-*` y también los `gitbook-plugin-*` existentes).
 - Modifica los nombres de los archivos de salida (`manual.pdf`, `manual.epub`) en `scripts/build.sh` y en el workflow si lo deseas.
 - Si no necesitas GitHub Pages, elimina el paso de despliegue en `gitbook-deploy.yml` y deja solo la generación de PDF/EPUB como artefactos.
 
